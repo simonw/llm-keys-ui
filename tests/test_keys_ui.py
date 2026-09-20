@@ -5,7 +5,7 @@ import click
 from click.testing import CliRunner
 from starlette.testclient import TestClient
 
-import llm_key_ui
+import llm_keys_ui
 
 
 def make_cli():
@@ -13,12 +13,12 @@ def make_cli():
     def cli():
         pass
 
-    llm_key_ui.register_commands(cli)
+    llm_keys_ui.register_commands(cli)
     return cli
 
 
 def test_plugin_is_installed():
-    assert llm_key_ui
+    assert llm_keys_ui
 
 
 def test_command_uses_default_host_and_port(monkeypatch):
@@ -27,8 +27,8 @@ def test_command_uses_default_host_and_port(monkeypatch):
     def fake_run(app, *, host, port):
         called.update(app=app, host=host, port=port)
 
-    monkeypatch.setattr(llm_key_ui.uvicorn, "run", fake_run)
-    result = CliRunner().invoke(make_cli(), ["key-ui"])
+    monkeypatch.setattr(llm_keys_ui.uvicorn, "run", fake_run)
+    result = CliRunner().invoke(make_cli(), ["keys-ui"])
 
     assert result.exit_code == 0
     assert called["host"] == "127.0.0.1"
@@ -41,8 +41,8 @@ def test_command_accepts_short_host_and_port_options(monkeypatch):
     def fake_run(app, *, host, port):
         called.update(app=app, host=host, port=port)
 
-    monkeypatch.setattr(llm_key_ui.uvicorn, "run", fake_run)
-    result = CliRunner().invoke(make_cli(), ["key-ui", "-h", "0.0.0.0", "-p", "8123"])
+    monkeypatch.setattr(llm_keys_ui.uvicorn, "run", fake_run)
+    result = CliRunner().invoke(make_cli(), ["keys-ui", "-h", "0.0.0.0", "-p", "8123"])
 
     assert result.exit_code == 0
     assert called["host"] == "0.0.0.0"
@@ -55,16 +55,16 @@ def test_all_option_listens_on_every_interface_and_prints_urls(monkeypatch):
     def fake_run(app, *, host, port):
         called.update(app=app, host=host, port=port)
 
-    monkeypatch.setattr(llm_key_ui.uvicorn, "run", fake_run)
+    monkeypatch.setattr(llm_keys_ui.uvicorn, "run", fake_run)
     monkeypatch.setattr(
-        llm_key_ui,
+        llm_keys_ui,
         "_interface_ipv4_addresses",
         lambda: ["127.0.0.1", "192.168.1.20", "100.113.1.114"],
     )
 
     result = CliRunner().invoke(
         make_cli(),
-        ["key-ui", "--host", "192.0.2.10", "--all", "--port", "8123"],
+        ["keys-ui", "--host", "192.0.2.10", "--all", "--port", "8123"],
     )
 
     assert result.exit_code == 0
@@ -91,15 +91,15 @@ def test_key_names_are_collected_from_sync_async_and_embedding_models(monkeypatc
         SimpleNamespace(model=SimpleNamespace(needs_key="cohere")),
     ]
     monkeypatch.setattr(
-        llm_key_ui.llm, "get_models_with_aliases", lambda: regular_models
+        llm_keys_ui.llm, "get_models_with_aliases", lambda: regular_models
     )
     monkeypatch.setattr(
-        llm_key_ui.llm,
+        llm_keys_ui.llm,
         "get_embedding_models_with_aliases",
         lambda: embedding_models,
     )
 
-    assert llm_key_ui._installed_model_key_names() == [
+    assert llm_keys_ui._installed_model_key_names() == [
         "anthropic",
         "cohere",
         "openai",
@@ -117,7 +117,7 @@ def test_page_merges_model_and_stored_names_but_never_values(tmp_path):
         )
     )
     client = TestClient(
-        llm_key_ui.create_app(
+        llm_keys_ui.create_app(
             keys_path=keys_path,
             csrf_token="test-token",
             model_key_names=["anthropic", "openai"],
@@ -141,7 +141,7 @@ def test_existing_key_can_be_updated_without_rendering_value(tmp_path):
     keys_path = tmp_path / "keys.json"
     keys_path.write_text(json.dumps({"openai": "old-secret"}))
     client = TestClient(
-        llm_key_ui.create_app(
+        llm_keys_ui.create_app(
             keys_path=keys_path,
             csrf_token="test-token",
             model_key_names=["openai"],
@@ -173,7 +173,7 @@ def test_existing_key_can_be_updated_without_rendering_value(tmp_path):
 def test_new_key_can_be_added(tmp_path):
     keys_path = tmp_path / "keys.json"
     client = TestClient(
-        llm_key_ui.create_app(
+        llm_keys_ui.create_app(
             keys_path=keys_path, csrf_token="test-token", model_key_names=[]
         )
     )
@@ -197,7 +197,7 @@ def test_new_key_can_be_added(tmp_path):
 def test_post_requires_csrf_token(tmp_path):
     keys_path = tmp_path / "keys.json"
     client = TestClient(
-        llm_key_ui.create_app(
+        llm_keys_ui.create_app(
             keys_path=keys_path, csrf_token="test-token", model_key_names=[]
         )
     )
@@ -213,7 +213,7 @@ def test_post_requires_csrf_token(tmp_path):
 
 def test_validation_error_does_not_render_submitted_value(tmp_path):
     client = TestClient(
-        llm_key_ui.create_app(
+        llm_keys_ui.create_app(
             keys_path=tmp_path / "keys.json",
             csrf_token="test-token",
             model_key_names=[],

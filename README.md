@@ -1,9 +1,9 @@
-# llm-key-ui
+# llm-keys-ui
 
-[![PyPI](https://img.shields.io/pypi/v/llm-key-ui.svg)](https://pypi.org/project/llm-key-ui/)
-[![Changelog](https://img.shields.io/github/v/release/simonw/llm-key-ui?include_prereleases&label=changelog)](https://github.com/simonw/llm-key-ui/releases)
-[![Tests](https://github.com/simonw/llm-key-ui/actions/workflows/test.yml/badge.svg)](https://github.com/simonw/llm-key-ui/actions/workflows/test.yml)
-[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/llm-key-ui/blob/main/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/llm-keys-ui.svg)](https://pypi.org/project/llm-keys-ui/)
+[![Changelog](https://img.shields.io/github/v/release/simonw/llm-keys-ui?include_prereleases&label=changelog)](https://github.com/simonw/llm-keys-ui/releases)
+[![Tests](https://github.com/simonw/llm-keys-ui/actions/workflows/test.yml/badge.svg)](https://github.com/simonw/llm-keys-ui/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/llm-keys-ui/blob/main/LICENSE)
 
 A local web UI for setting keys used by [LLM](https://llm.datasette.io/).
 
@@ -14,7 +14,7 @@ This plugin is particularly useful if you are running a coding agent on a remote
 Install this plugin in the same environment as [LLM](https://llm.datasette.io/).
 
 ```bash
-llm install llm-key-ui
+llm install llm-keys-ui
 ```
 
 ## Usage
@@ -22,25 +22,25 @@ llm install llm-key-ui
 Start the server on `127.0.0.1:8010`:
 
 ```bash
-llm key-ui
+llm keys-ui
 ```
 
 The port can be changed with `-p` or `--port`:
 
 ```bash
-llm key-ui -p 8080
+llm keys-ui -p 8080
 ```
 
 Use `-h` or `--host` to listen on a different interface:
 
 ```bash
-llm key-ui -h 0.0.0.0
+llm keys-ui -h 0.0.0.0
 ```
 
 The `--all` option also listens on `0.0.0.0` and prints an HTTP URL for every IPv4 address assigned to the computer:
 
 ```bash
-llm key-ui --all
+llm keys-ui --all
 ```
 
 Use this if you want to set keys for a machine accessible via your local network or over Tailscale.
@@ -54,7 +54,7 @@ Existing key values cannot be read using this tool.
 To set up this plugin locally, first checkout the code. Then run the tests with `uv`:
 
 ```bash
-cd llm-key-ui
+cd llm-keys-ui
 uv run pytest
 ```
 

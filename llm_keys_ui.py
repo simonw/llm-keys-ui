@@ -453,7 +453,7 @@ def create_app(
     csrf_token: str | None = None,
     model_key_names: list[str] | None = None,
 ) -> Starlette:
-    """Create the Starlette application used by the ``llm key-ui`` command."""
+    """Create the Starlette application used by the ``llm keys-ui`` command."""
 
     resolved_keys_path = keys_path or (llm.user_dir() / "keys.json")
     resolved_csrf_token = csrf_token or secrets.token_urlsafe(32)
@@ -620,7 +620,7 @@ def _print_interface_urls(port: int) -> None:
 
 @llm.hookimpl
 def register_commands(cli):
-    @cli.command(name="key-ui", context_settings={"help_option_names": ["--help"]})
+    @cli.command(name="keys-ui", context_settings={"help_option_names": ["--help"]})
     @click.option(
         "-p",
         "--port",
@@ -642,7 +642,7 @@ def register_commands(cli):
         is_flag=True,
         help="Listen on all IPv4 interfaces and print their URLs.",
     )
-    def key_ui(port: int, host: str, all_interfaces: bool) -> None:
+    def keys_ui(port: int, host: str, all_interfaces: bool) -> None:
         """Start the local LLM key management UI."""
 
         if all_interfaces:
