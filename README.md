@@ -1,6 +1,9 @@
 # llm-key-ui
 
 [![PyPI](https://img.shields.io/pypi/v/llm-key-ui.svg)](https://pypi.org/project/llm-key-ui/)
+[![Changelog](https://img.shields.io/github/v/release/simonw/llm-key-ui?include_prereleases&label=changelog)](https://github.com/simonw/llm-key-ui/releases)
+[![Tests](https://github.com/simonw/llm-key-ui/actions/workflows/test.yml/badge.svg)](https://github.com/simonw/llm-key-ui/actions/workflows/test.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/simonw/llm-key-ui/blob/main/LICENSE)
 
 A local web UI for setting keys used by [LLM](https://llm.datasette.io/).
 
