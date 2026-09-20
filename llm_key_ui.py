@@ -1,7 +1,9 @@
 import html
+import ipaddress
 import json
 import os
 import secrets
+import socket
 import tempfile
 from pathlib import Path
 from string import Template
@@ -9,6 +11,7 @@ from urllib.parse import parse_qs, quote
 
 import click
 import llm
+import psutil
 import uvicorn
 from starlette.applications import Starlette
 from starlette.requests import Request
@@ -601,6 +604,24 @@ def _safe_key_state(
         )
 
 
+def _interface_ipv4_addresses() -> list[str]:
+    addresses = {
+        address.address
+        for interface_addresses in psutil.net_if_addrs().values()
+        for address in interface_addresses
+        if address.family == socket.AF_INET
+    }
+    if not addresses:
+        addresses.add("127.0.0.1")
+    return sorted(addresses, key=ipaddress.IPv4Address)
+
+
+def _print_interface_urls(port: int) -> None:
+    click.echo("Available URLs:")
+    for address in _interface_ipv4_addresses():
+        click.echo(f"  http://{address}:{port}/")
+
+
 @llm.hookimpl
 def register_commands(cli):
     @cli.command(name="key-ui", context_settings={"help_option_names": ["--help"]})
@@ -619,7 +640,16 @@ def register_commands(cli):
         show_default=True,
         help="Host interface for the server.",
     )
-    def key_ui(port: int, host: str) -> None:
+    @click.option(
+        "--all",
+        "all_interfaces",
+        is_flag=True,
+        help="Listen on all IPv4 interfaces and print their URLs.",
+    )
+    def key_ui(port: int, host: str, all_interfaces: bool) -> None:
         """Start the local LLM key management UI."""
 
+        if all_interfaces:
+            host = "0.0.0.0"
+            _print_interface_urls(port)
         uvicorn.run(create_app(), host=host, port=port)

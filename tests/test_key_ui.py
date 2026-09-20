@@ -49,6 +49,32 @@ def test_command_accepts_short_host_and_port_options(monkeypatch):
     assert called["port"] == 8123
 
 
+def test_all_option_listens_on_every_interface_and_prints_urls(monkeypatch):
+    called = {}
+
+    def fake_run(app, *, host, port):
+        called.update(app=app, host=host, port=port)
+
+    monkeypatch.setattr(llm_key_ui.uvicorn, "run", fake_run)
+    monkeypatch.setattr(
+        llm_key_ui,
+        "_interface_ipv4_addresses",
+        lambda: ["127.0.0.1", "192.168.1.20", "100.113.1.114"],
+    )
+
+    result = CliRunner().invoke(
+        make_cli(),
+        ["key-ui", "--host", "192.0.2.10", "--all", "--port", "8123"],
+    )
+
+    assert result.exit_code == 0
+    assert called["host"] == "0.0.0.0"
+    assert called["port"] == 8123
+    assert "http://127.0.0.1:8123/" in result.output
+    assert "http://192.168.1.20:8123/" in result.output
+    assert "http://100.113.1.114:8123/" in result.output
+
+
 def test_key_names_are_collected_from_sync_async_and_embedding_models(monkeypatch):
     regular_models = [
         SimpleNamespace(

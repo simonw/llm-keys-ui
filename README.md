@@ -32,6 +32,13 @@ Use `-h` or `--host` to listen on a different interface:
 llm key-ui -h 0.0.0.0
 ```
 
+The `--all` option also listens on `0.0.0.0` and prints an HTTP URL for every
+IPv4 address assigned to the computer:
+
+```bash
+llm key-ui --all
+```
+
 Listening on `0.0.0.0` makes the key-management interface available to other
 devices that can reach the computer. The server does not provide authentication.
 
