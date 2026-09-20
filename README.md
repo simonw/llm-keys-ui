@@ -4,6 +4,8 @@
 
 A local web UI for setting keys used by [LLM](https://llm.datasette.io/).
 
+This plugin is particularly useful if you are running a coding agent on a remote machine and want to set some API keys without pasting them into the agent context.
+
 ## Installation
 
 Install this plugin in the same environment as [LLM](https://llm.datasette.io/).
@@ -32,20 +34,17 @@ Use `-h` or `--host` to listen on a different interface:
 llm key-ui -h 0.0.0.0
 ```
 
-The `--all` option also listens on `0.0.0.0` and prints an HTTP URL for every
-IPv4 address assigned to the computer:
+The `--all` option also listens on `0.0.0.0` and prints an HTTP URL for every IPv4 address assigned to the computer:
 
 ```bash
 llm key-ui --all
 ```
 
-Listening on `0.0.0.0` makes the key-management interface available to other
-devices that can reach the computer. The server does not provide authentication.
+Use this if you want to set keys for a machine accessible via your local network or over Tailscale.
 
-The interface finds the key names declared by all installed language and
-embedding models. It also includes custom names already stored by LLM. Select a
-listed name to set its value, or enter any other name to add a key. Existing
-values are never displayed.
+The interface does not implement authentication. Stop the server once you have set your keys.
+
+Existing key values cannot be read using this tool.
 
 ## Development
 
