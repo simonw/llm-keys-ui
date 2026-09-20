@@ -1,0 +1,25 @@
+[project]
+name = "llm-key-ui"
+version = "0.1"
+description = ""
+readme = "README.md"
+authors = [{name = ""}]
+license = "Apache-2.0"
+classifiers = []
+requires-python = ">=3.10"
+dependencies = [
+    "llm"
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.uv]
+package = true
+
+[project.entry-points.llm]
+key_ui = "llm_key_ui"
+
+[dependency-groups]
+dev = ["pytest"]
