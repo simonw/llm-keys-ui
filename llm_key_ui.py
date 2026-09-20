@@ -23,8 +23,6 @@ from starlette.responses import (
 )
 from starlette.routing import Route
 
-NOTE_KEY = "// Note"
-NOTE_VALUE = "This file stores secret API credentials. Do not share!"
 MAX_FORM_SIZE = 64 * 1024
 
 
@@ -321,7 +319,7 @@ def _load_keys(path: Path) -> dict[str, str]:
 
 
 def _key_names(path: Path) -> list[str]:
-    return sorted(name for name in _load_keys(path) if name != NOTE_KEY)
+    return sorted(_load_keys(path))
 
 
 def _installed_model_key_names() -> list[str]:
@@ -353,7 +351,7 @@ def _set_key(path: Path, name: str, value: str) -> None:
     temporary_path = None
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
-        keys = _load_keys(path) if path.exists() else {NOTE_KEY: NOTE_VALUE}
+        keys = _load_keys(path)
         keys[name] = value
         descriptor, temporary_name = tempfile.mkstemp(
             dir=path.parent, prefix=f".{path.name}."
@@ -384,8 +382,6 @@ def _validate_name(name: str) -> str | None:
         return "Enter a key name."
     if len(name) > 200:
         return "Key names must be 200 characters or fewer."
-    if name == NOTE_KEY:
-        return "That key name is reserved by LLM."
     if any(ord(character) < 32 or ord(character) == 127 for character in name):
         return "Key names cannot contain control characters."
     return None

@@ -111,7 +111,6 @@ def test_page_merges_model_and_stored_names_but_never_values(tmp_path):
     keys_path.write_text(
         json.dumps(
             {
-                "// Note": "This should not be listed",
                 "openai": "openai-secret-value",
                 "private-model": "private-secret-value",
             }
@@ -133,7 +132,6 @@ def test_page_merges_model_and_stored_names_but_never_values(tmp_path):
     assert "private-model" in response.text
     assert "openai-secret-value" not in response.text
     assert "private-secret-value" not in response.text
-    assert "This should not be listed" not in response.text
     assert response.text.count(">Stored</span>") == 2
     assert response.text.count(">Not stored</span>") == 1
     assert response.headers["cache-control"] == "no-store"
@@ -193,7 +191,7 @@ def test_new_key_can_be_added(tmp_path):
     stored = json.loads(keys_path.read_text())
     assert response.status_code == 303
     assert stored["new-provider"] == "new-secret"
-    assert stored["// Note"] == llm_key_ui.NOTE_VALUE
+    assert stored == {"new-provider": "new-secret"}
 
 
 def test_post_requires_csrf_token(tmp_path):
