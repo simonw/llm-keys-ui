@@ -51,6 +51,16 @@ The interface does not implement authentication. Stop the server once you have s
 
 Existing key values cannot be read using this tool.
 
+## Coding agents
+
+Agents that need a key should follow [`.agents/skills/llm-keys-ui/SKILL.md`](.agents/skills/llm-keys-ui/SKILL.md). The command is:
+
+```bash
+uvx --with llm-keys-ui llm keys-ui --all
+```
+
+Claude Code loads the same file through `.claude/skills/llm-keys-ui`.
+
 ## Development
 
 To set up this plugin locally, first checkout the code. Then run the tests with `uv`:
